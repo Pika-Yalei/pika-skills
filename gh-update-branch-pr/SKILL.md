@@ -7,7 +7,7 @@ description: Use when asked to update, rewrite, refresh, or synchronize the titl
 
 ## Overview
 
-Update the current branch's existing GitHub PR title and body from the PR's actual diff. Follow the repository PR template and require an explicit issue-association decision before writing.
+Update the current branch's existing GitHub PR title and body from the PR's actual diff. Follow the repository PR template, require an explicit issue-association decision before writing, and make every associated issue close automatically when the PR is merged.
 
 ## Workflow
 
@@ -22,7 +22,8 @@ Update the current branch's existing GitHub PR title and body from the PR's actu
    - If no, write `None` in the template's related-issue field.
    - If yes with a URL, verify it with `gh issue view <url> --json number,title,state,url` and require it to belong to the PR repository.
    - If yes without a URL, search that repository's open and closed issues with `gh issue list --state all --search ... --json number,title,state,url`, using branch tokens, commit subjects, changed modules, and diff concepts. Automatically choose only one unambiguous semantic match. Otherwise show the best candidates with URLs and ask the user to select; never invent or create an issue.
-   - Use `Related to #<number>` by default. Use `Fixes`, `Closes`, or `Resolves` only when the user explicitly requests automatic closure and the PR fully resolves the issue.
+   - Associate only issues that the PR fully resolves. If an issue is merely related, omit it or ask the user whether it should be excluded; do not create a non-closing association.
+   - Write every verified association as `Closes #<number>` so GitHub automatically closes the issue when the PR is merged. Never use `Related to`.
 
 5. **Fill the complete template.** Preserve its headings, order, and checklist. Replace instructional comments and placeholders with evidence-backed content. Mark a test or checklist item complete only when supported by commands actually run or facts verified during the task; otherwise leave it unchecked and explain `Not tested` when the template requires it. Do not add claims unsupported by the diff or verification output.
 
@@ -43,11 +44,11 @@ Compare the returned title and body with the intended values. Report the PR URL,
 | Issue decision missing | Ask and wait before editing |
 | Multiple plausible templates or issues | Ask the user to choose |
 | No test evidence | Leave unchecked; state not tested |
-| Association requested without closure | Use `Related to #N` |
+| Issue association requested | Use `Closes #N` for every fully resolved issue |
 
 ## Common Mistakes
 
 - Do not overwrite the body with a generic format when a repository template exists.
 - Do not describe local unpushed changes as part of the remote PR.
 - Do not treat matching keywords as enough evidence to select an issue.
-- Do not use a closing keyword merely because the branch is a bug fix.
+- Do not associate an issue that the PR does not fully resolve, because every association is closing.
