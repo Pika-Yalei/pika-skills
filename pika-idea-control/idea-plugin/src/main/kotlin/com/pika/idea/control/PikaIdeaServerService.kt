@@ -1,14 +1,12 @@
 package com.pika.idea.control
 
-import com.intellij.ide.plugins.PluginManagerCore
 import com.intellij.openapi.Disposable
 import com.intellij.openapi.diagnostic.Logger
-import com.intellij.openapi.extensions.PluginId
+import java.nio.charset.StandardCharsets
 
 internal class PikaIdeaServerService : Disposable {
     private val log = Logger.getInstance(PikaIdeaServerService::class.java)
-    private val pluginVersion =
-        PluginManagerCore.getPlugin(PluginId.getId(PLUGIN_ID))?.version ?: "dev"
+    private val pluginVersion = packagedPluginVersion()
 
     @Volatile
     private var httpServer: PikaIdeaHttpServer? = null
@@ -61,9 +59,20 @@ internal class PikaIdeaServerService : Disposable {
     }
 
     companion object {
-        // Kept stable so upgrading an existing installation replaces the old plugin in place.
+        // Keep stable so Marketplace upgrades replace existing manual installations in place.
         const val PLUGIN_ID = "com.pika.ideaControlMcp"
         const val PORT_PROPERTY = "pika.idea.port"
         const val PORT_ENVIRONMENT_VARIABLE = "PIKA_IDEA_PORT"
+
+        private val VERSION_TAG = Regex("""<version>\s*([^<]+?)\s*</version>""")
+
+        internal fun packagedPluginVersion(): String =
+            PikaIdeaServerService::class.java
+                .getResourceAsStream("/META-INF/plugin.xml")
+                ?.bufferedReader(StandardCharsets.UTF_8)
+                ?.use { reader ->
+                    VERSION_TAG.find(reader.readText())?.groupValues?.get(1)
+                }
+                ?: "dev"
     }
 }

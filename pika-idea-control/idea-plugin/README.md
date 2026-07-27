@@ -19,7 +19,7 @@ REST 接口；上一级 Skill 通过标准库 Python 脚本调用该接口。
 ## 兼容性
 
 - 插件版本：`0.2.0`
-- IntelliJ IDEA：2024.2–2025.3
+- IntelliJ IDEA：2024.2–2026.2
 - 构建 JDK：21
 - Python 调用器：Python 3.10+，仅使用标准库
 
@@ -40,6 +40,9 @@ Python 文件是 Skill 的内部实现，不是需要单独安装、发布或注
 ## 安装
 
 ### IDEA 插件
+
+Marketplace 审核通过后，可在 IDEA 的 `Settings | Plugins | Marketplace` 中搜索并安装
+`Pika Control`。发布前或手动测试时：
 
 1. 从 GitHub Release 下载 `Pika-IDEA-Control-0.2.0.zip`。
 2. 在 IDEA 的 `Settings | Plugins` 中选择从磁盘安装 `Pika Control`。
@@ -79,8 +82,16 @@ python3 -m unittest discover -s ../tests -p 'test_*.py' -v
 
 插件包生成在 `build/distributions/Pika-IDEA-Control-0.2.0.zip`。
 
+## 许可证
+
+Pika Control 使用 [Apache License 2.0](LICENSE)。构建时许可证会打包为插件
+JAR 内的 `META-INF/LICENSE.txt`。首次上传 JetBrains Marketplace 时，在许可证
+字段选择 `Apache 2.0`。
+
 ## 自动发布
 
 推送与 `build.gradle.kts` 版本一致的稳定标签（例如 `v0.2.0`）后，GitHub Actions
-会分别用 IDEA 2025.3.2 和 2024.2 运行测试与兼容性校验，然后创建 GitHub Release，
-上传插件 ZIP 和 SHA-256 校验文件。
+会分别用 IDEA 2026.2 和 2024.2 运行测试与兼容性校验，然后创建 GitHub Release，
+上传插件 ZIP 和 SHA-256 校验文件。首次 Marketplace 上传需在 JetBrains 网页完成；
+创建 `JETBRAINS_MARKETPLACE_TOKEN` 仓库 Secret 后，后续标签会同时发布 Marketplace
+更新。

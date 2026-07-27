@@ -52,6 +52,11 @@ Open a new Codex task after installation. If the Skill is not discovered, restar
 
 ## Install the Pika Control IDEA plugin
 
+After Marketplace approval, open `Settings/Preferences | Plugins | Marketplace`, search for
+`Pika Control`, and install it directly.
+
+For pre-release testing or when Marketplace is unavailable, install a ZIP:
+
 First obtain the plugin ZIP. If a `Pika-IDEA-Control-<version>.zip` asset is available on
 [GitHub Releases](https://github.com/Arlowen/pika-skills/releases), download it without
 extracting it.

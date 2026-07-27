@@ -1,12 +1,35 @@
-<idea-plugin>
+<idea-plugin url="https://github.com/Arlowen/pika-skills/tree/main/pika-idea-control/idea-plugin">
   <id>com.pika.ideaControlMcp</id>
   <name>Pika Control</name>
-  <vendor>Pika</vendor>
+  <vendor url="https://github.com/Arlowen" email="pikapi010410@gmail.com">Pika</vendor>
 
   <description><![CDATA[
-    Exposes deterministic Run/Debug service control and IDE changelist operations through a
-    loopback-only local REST API for automation skills.
+    <p>
+      Pika Control provides deterministic IntelliJ IDEA Run/Debug service control and
+      changelist operations for the companion pika-idea-control Codex Skill.
+    </p>
+    <ul>
+      <li>List, start, stop, and restart exact Run Configurations.</li>
+      <li>Inspect executions and control duplicate instances safely.</li>
+      <li>List, create, organize, and delete IDEA changelists.</li>
+    </ul>
+    <p>
+      The plugin listens only on the local loopback interface. It does not use a cloud
+      service and does not collect telemetry.
+    </p>
+    <p>
+      Licensed under the Apache License, Version 2.0.
+    </p>
   ]]></description>
+
+  <change-notes><![CDATA[
+    <p>Initial JetBrains Marketplace release.</p>
+    <ul>
+      <li>Loopback-only REST API for Run/Debug and changelist automation.</li>
+      <li>Exact execution identifiers and duplicate-instance protection.</li>
+      <li>Compatibility with IntelliJ IDEA 2024.2 through 2026.2.</li>
+    </ul>
+  ]]></change-notes>
 
   <depends>com.intellij.modules.platform</depends>
   <depends>com.intellij.modules.vcs</depends>

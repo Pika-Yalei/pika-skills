@@ -76,11 +76,11 @@ jobs:
 
           echo "version=$plugin_version" >> "$GITHUB_OUTPUT"
 
-      - name: Test against IDEA 2025.3
+      - name: Test against IDEA 2026.2
         working-directory: pika-idea-control/idea-plugin
         run: |
           ./gradlew clean test \
-            -PtargetIdeaVersion=2025.3.2 \
+            -PtargetIdeaVersion=2026.2 \
             --no-daemon \
             --stacktrace
 
@@ -113,6 +113,24 @@ jobs:
             cd "$(dirname "$artifact")"
             sha256sum "$(basename "$artifact")" > "$(basename "$artifact").sha256"
           )
+
+      - name: Publish JetBrains Marketplace update
+        env:
+          PUBLISH_TOKEN: ${{ secrets.JETBRAINS_MARKETPLACE_TOKEN }}
+          CERTIFICATE_CHAIN: ${{ secrets.JETBRAINS_CERTIFICATE_CHAIN }}
+          PRIVATE_KEY: ${{ secrets.JETBRAINS_PRIVATE_KEY }}
+          PRIVATE_KEY_PASSWORD: ${{ secrets.JETBRAINS_PRIVATE_KEY_PASSWORD }}
+        working-directory: pika-idea-control/idea-plugin
+        run: |
+          if [[ -z "$PUBLISH_TOKEN" ]]; then
+            echo "JETBRAINS_MARKETPLACE_TOKEN is not configured; skipping Marketplace publication."
+            exit 0
+          fi
+
+          ./gradlew publishPlugin \
+            -PtargetIdeaVersion=2024.2 \
+            --no-daemon \
+            --stacktrace
 
       - name: Publish GitHub Release
         env:

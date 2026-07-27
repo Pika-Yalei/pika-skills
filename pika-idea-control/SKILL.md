@@ -23,16 +23,17 @@ For installation or upgrade instructions, follow
 
 Before the first invocation:
 
-1. Obtain `Pika-IDEA-Control-<version>.zip`:
+1. Open `Settings/Preferences | Plugins` in IntelliJ IDEA.
+2. Install `Pika Control` from Marketplace when it is available. Otherwise obtain
+   `Pika-IDEA-Control-<version>.zip`:
    - Download it from [GitHub Releases](https://github.com/Arlowen/pika-skills/releases) when a
      release asset is available.
    - Otherwise, use JDK 21 to run `./gradlew buildPlugin` in `<skill-dir>/idea-plugin`; take the
      ZIP from `build/distributions/`.
-2. Open `Settings/Preferences | Plugins` in IntelliJ IDEA.
-3. Choose `Install Plugin from Disk`, select the ZIP without extracting it, and enable
-   `Pika Control`.
-4. Restart IDEA.
-5. Run `python3 <skill-dir>/scripts/pika_idea.py health` and require a successful response.
+3. For a ZIP, choose `Install Plugin from Disk` and select it without extracting it.
+4. Enable `Pika Control`.
+5. Restart IDEA.
+6. Run `python3 <skill-dir>/scripts/pika_idea.py health` and require a successful response.
 
 Use [references/installation.md](references/installation.md) for full installation,
 configuration, and troubleshooting details.

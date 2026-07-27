@@ -22,8 +22,14 @@ class PikaIdeaPlatformTest : BasePlatformTestCase() {
 
         assertNotNull(descriptor)
         assertTrue(descriptor!!.contains("<name>Pika Control</name>"))
+        assertTrue(descriptor.contains("<id>${PikaIdeaServerService.PLUGIN_ID}</id>"))
         assertTrue(descriptor.contains(PikaIdeaServerService::class.java.name))
         assertTrue(descriptor.contains(ExecutionRegistry::class.java.name))
+    }
+
+    fun testPackagedPluginVersionIsAvailableWithoutInternalPlatformApis() {
+        assertFalse(PikaIdeaServerService.packagedPluginVersion().isBlank())
+        assertFalse(PikaIdeaServerService.packagedPluginVersion() == "dev")
     }
 
     fun testExecutionRegistryProjectServiceIsAvailable() {

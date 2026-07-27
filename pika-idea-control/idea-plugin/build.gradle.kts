@@ -1,9 +1,10 @@
 import org.jetbrains.intellij.platform.gradle.IntelliJPlatformType
+import org.jetbrains.kotlin.gradle.dsl.JvmDefaultMode
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
 plugins {
     id("java")
-    id("org.jetbrains.kotlin.jvm") version "2.2.20"
+    id("org.jetbrains.kotlin.jvm") version "2.4.10"
     id("org.jetbrains.intellij.platform") version "2.18.1"
 }
 
@@ -15,7 +16,7 @@ val defaultIdeaPath = "/Applications/IntelliJ IDEA.app"
 val ideaPath = providers.gradleProperty("ideaPath").orElse(defaultIdeaPath)
 val targetIdeaVersion = providers.gradleProperty("targetIdeaVersion").orNull
 val minimumSupportedIdeaVersion = "2024.2"
-val maximumSupportedIdeaVersion = "2025.3.2"
+val maximumSupportedIdeaVersion = "2026.2"
 
 repositories {
     mavenCentral()
@@ -49,7 +50,7 @@ java {
 kotlin {
     compilerOptions {
         jvmTarget = JvmTarget.JVM_21
-        freeCompilerArgs.add("-Xjvm-default=all")
+        jvmDefault = JvmDefaultMode.NO_COMPATIBILITY
     }
 }
 
@@ -64,8 +65,18 @@ intellijPlatform {
 
         ideaVersion {
             sinceBuild = "242"
-            untilBuild = "253.*"
+            untilBuild = "262.*"
         }
+    }
+
+    publishing {
+        token = providers.environmentVariable("PUBLISH_TOKEN")
+    }
+
+    signing {
+        certificateChain = providers.environmentVariable("CERTIFICATE_CHAIN")
+        privateKey = providers.environmentVariable("PRIVATE_KEY")
+        password = providers.environmentVariable("PRIVATE_KEY_PASSWORD")
     }
 
     pluginVerification {
@@ -81,6 +92,13 @@ intellijPlatform {
 }
 
 tasks {
+    processResources {
+        from("LICENSE") {
+            into("META-INF")
+            rename { "LICENSE.txt" }
+        }
+    }
+
     test {
         useJUnitPlatform()
         systemProperty("pika.idea.port", "0")
