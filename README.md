@@ -7,6 +7,7 @@
 | Skill | 说明 | 入口 |
 | --- | --- | --- |
 | `gh-update-branch-pr` | 根据当前分支的真实变更更新已有 GitHub PR。 | [`SKILL.md`](./gh-update-branch-pr/SKILL.md) |
+| `social-card-skill` | 小红书图文、杂志风与瑞士风卡片、公众号封面。 | [`SKILL.md`](./social-card-skill/SKILL.md) |
 | `pika-idea-control` | 通过 Pika Control 插件管理 IDEA Run/Debug 服务与 Changelist。 | [`SKILL.md`](./pika-idea-control/SKILL.md) |
 | `notify-feishu-completion` | 工作完成后发送飞书通知。 | [`SKILL.md`](./notify-feishu-completion/SKILL.md) |
 
@@ -15,6 +16,7 @@
 ```text
 pika-skills/
 ├── gh-update-branch-pr/
+├── social-card-skill/
 ├── pika-idea-control/
 │   ├── SKILL.md
 │   ├── agents/
