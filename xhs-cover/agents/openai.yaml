@@ -1,0 +1,7 @@
+interface:
+
+  display_name: "xhs-cover"
+
+  short_description: "复用双细线或大双引号封面，支持三种配色，改文字即可出图"
+
+  default_prompt: "用 $xhs-cover 按我的小红书封面风格制作一张封面，文字为："

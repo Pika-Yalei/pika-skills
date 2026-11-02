@@ -1,0 +1,252 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>亚雷 · 小红书封面</title>
+<style>
+@font-face{font-family:"Cover Serif";src:url("cover-serif.woff2") format("woff2");font-weight:200 900;font-display:block}
+*{box-sizing:border-box}
+body{margin:0;background:#eeefec;color:#25352e;font-family:system-ui,"Microsoft YaHei",sans-serif}
+button,textarea,select{font:inherit}
+.workspace{display:grid;grid-template-columns:330px minmax(0,1fr);gap:48px;max-width:1240px;margin:0 auto;padding:48px 32px;align-items:start}
+.editor{padding-top:12px}
+.eyebrow{font-size:12px;letter-spacing:.18em;color:#6f7d73;margin-bottom:14px}
+h1{font-size:26px;font-weight:600;margin:0 0 12px}
+.intro,.hint{font-size:13px;line-height:1.8;color:#6d766f;margin:0 0 26px}
+label{display:block;font-size:13px;font-weight:600;margin:24px 0 10px}
+textarea,select{width:100%;border:1px solid #cdd4ce;border-radius:8px;background:#fff;padding:12px;color:#26382f;outline-offset:3px}
+textarea{height:204px;resize:vertical;line-height:1.8}
+.hint{margin:8px 0 0;font-size:12px}
+.actions{display:grid;gap:10px;margin-top:28px}
+button{border:0;border-radius:8px;padding:13px 14px;background:#294e40;color:#fff;cursor:pointer;font-size:13px;font-weight:600}
+button.secondary{background:transparent;border:1px solid #bdc9bf;color:#345343}
+button:disabled{opacity:.45;cursor:not-allowed}
+.status{font-size:12px;line-height:1.7;min-height:40px;margin:14px 0;color:#68776c}
+.status.error{color:#ac3e29}
+.preview-panel{min-width:0}
+.preview-label{font-size:12px;color:#738076;display:flex;justify-content:space-between;margin:0 0 14px}
+.preview-window{position:relative;width:100%;aspect-ratio:3/4;box-shadow:0 8px 34px #2030250d;overflow:hidden}
+/* The editor above never appears in exported images. */
+.cover{--paper:#f6f7ef;--ink:#203e32;--accent:#438b75;--rule:#647f70;--title-size:120px;--rule-top:360px;position:relative;width:1080px;height:1440px;background:var(--paper);color:var(--ink);overflow:hidden;transform:scale(var(--preview-scale,1));transform-origin:top left}
+.cover[data-theme="orange"]{--paper:#fff8ef;--ink:#191b17;--accent:#cf6648;--rule:#c8684c}
+.cover[data-theme="blue"]{--paper:#f1f7fc;--ink:#191d1b;--accent:#288db9;--rule:#378eaf}
+.composition{position:absolute;left:112px;right:112px;top:var(--rule-top);border-top:3px solid var(--rule);border-bottom:3px solid var(--rule);padding:60px 0}
+.headline{margin:0;font-family:"Cover Serif","Noto Serif SC","Source Han Serif SC","Songti SC",SimSun,serif;font-size:var(--title-size);font-weight:700;line-height:1.4;letter-spacing:0;font-style:normal;font-synthesis:none}
+.line{display:block;white-space:pre;height:1.4em}
+.accent{color:var(--accent)}
+.quote-mark{display:none;position:absolute;color:var(--accent);font-family:"Cover Serif",serif;font-size:320px;font-weight:700;line-height:280px;height:280px;width:320px;font-synthesis:none}
+.cover[data-style="quote"] .quote-mark{display:block}
+.cover[data-style="quote"] .composition{border:0;padding:0}
+/* Optical alignment compensates for the font's CJK quote side bearings. */
+.quote-open{left:-56px;top:calc(var(--rule-top) - 140px)}
+.quote-close{right:-56px;top:calc(var(--rule-top) + var(--quote-text-height) + 40px);text-align:right}
+body.render-only{background:transparent}
+body.render-only .workspace{display:block;max-width:none;margin:0;padding:0}
+body.render-only .editor,body.render-only .preview-label{display:none}
+body.render-only .preview-window{width:1080px;height:1440px;box-shadow:none}
+body.render-only .cover{transform:none}
+@media(max-width:760px){.workspace{grid-template-columns:1fr;padding:24px;gap:24px}.editor{padding:0}.preview-panel{max-width:540px;width:100%;margin:auto}textarea{height:150px}}
+</style>
+</head>
+<body>
+<main class="workspace">
+  <aside class="editor">
+    <div class="eyebrow">亚雷时光机 / COVER</div><h1>改文字，就能出封面</h1>
+    <p class="intro">浅色底、宋体和留白。<br>每行文字对应封面上的一行。</p>
+    <label for="copy">封面文字</label><textarea id="copy" spellcheck="false" aria-describedby="copy-hint"></textarea>
+    <p id="copy-hint" class="hint">用 **双星号** 包住要强调的文字。建议 2–4 行。</p>
+    <label for="style">封面风格</label><select id="style"><option value="lines">双细线</option><option value="quote">“ ” 双引号</option></select>
+    <label for="theme">配色</label><select id="theme"><option value="green">浅米绿 · 松绿</option><option value="orange">暖奶油 · 朱橙</option><option value="blue">浅冰蓝 · 湖蓝</option></select>
+    <div class="actions"><button id="export" disabled>下载 PNG · 1080 × 1440</button><button class="secondary" id="save">保存当前 HTML</button></div>
+    <p id="status" class="status" role="status">正在加载字体…</p>
+  </aside>
+  <section class="preview-panel" aria-label="封面预览">
+    <div class="preview-label"><span>封面预览</span><span>3 : 4</span></div>
+    <div class="preview-window"><article class="cover" id="cover" data-theme="green" data-style="lines"><span class="quote-mark quote-open" aria-hidden="true">“</span><div class="composition"><h2 class="headline" id="headline"></h2></div><span class="quote-mark quote-close" aria-hidden="true">”</span></article></div>
+  </section>
+</main>
+<!-- Only this JSON needs to change when generating a new cover programmatically. -->
+<script id="cover-data" type="application/json">
+{"theme":"green","text":"Codex 重置卡\n**已到账**"}
+</script>
+<script>
+(() => {
+  const initial = JSON.parse(document.getElementById('cover-data').textContent);
+  const cover = document.getElementById('cover');
+  const headline = document.getElementById('headline');
+  const copy = document.getElementById('copy');
+  const theme = document.getElementById('theme');
+  const layout = document.getElementById('style');
+  const status = document.getElementById('status');
+  const exportButton = document.getElementById('export');
+  const renderOnly = new URLSearchParams(location.search).has('render');
+  let fontReady = false;
+  let valid = false;
+  let lines = [];
+  copy.value = initial.text;
+  theme.value = ['green','orange','blue'].includes(initial.theme) ? initial.theme : 'green';
+  layout.value = initial.style === 'quote' ? 'quote' : 'lines';
+
+  if (renderOnly) {
+    document.body.classList.add('render-only');
+  }
+
+  function segments(text) {
+    return text.split(/(\*\*[^*]+\*\*)/g).filter(Boolean).map(part => ({
+      text: part.startsWith('**') && part.endsWith('**') ? part.slice(2,-2) : part,
+      accent: part.startsWith('**') && part.endsWith('**')
+    }));
+  }
+
+  function resize() {
+    const width = document.querySelector('.preview-window').clientWidth;
+    cover.style.setProperty('--preview-scale', renderOnly ? 1 : width / 1080);
+  }
+
+  function update() {
+    const textLines = copy.value.replace(/\r/g,'').split('\n').filter(line => line.trim());
+    lines = textLines.map(segments);
+    cover.dataset.theme = theme.value;
+    cover.dataset.style = layout.value;
+    headline.replaceChildren();
+
+    for (const parts of lines) {
+      const line = document.createElement('span');
+      line.className = 'line';
+
+      for (const part of parts) {
+        const span = document.createElement('span');
+        span.textContent = part.text;
+
+        if (part.accent) {
+          span.className = 'accent';
+        }
+
+        line.append(span);
+      }
+
+      headline.append(line);
+    }
+
+    const context = document.createElement('canvas').getContext('2d');
+    context.font = '700 120px "Cover Serif"';
+    const longest = Math.max(1,...lines.map(parts => parts.reduce((sum,part) => sum + context.measureText(part.text).width,0)));
+    const size = Math.min(120,Math.floor(856 / longest * 120));
+    const quote = layout.value === 'quote';
+    const top = quote ? (lines.length <= 2 ? 450 : lines.length === 3 ? 390 : lines.length === 4 ? 310 : 250) : (lines.length >= 4 ? 300 : 360);
+    const fittedSize = quote ? Math.min(size,Math.floor((1250 - top - 320) / Math.max(1,lines.length) / 1.4)) : size;
+    const appliedSize = Math.max(84,fittedSize);
+    cover.style.setProperty('--title-size', `${appliedSize}px`);
+    cover.style.setProperty('--rule-top', `${top}px`);
+    cover.style.setProperty('--quote-text-height', `${lines.length * appliedSize * 1.4}px`);
+    const bottom = top + (quote ? 320 : 126) + lines.length * appliedSize * 1.4;
+    valid = lines.length >= 1 && lines.length <= 5 && fittedSize >= 84 && bottom <= 1250;
+    exportButton.disabled = !valid || !fontReady;
+    status.classList.toggle('error', !valid);
+    status.textContent = !valid ? '文字过长，请增加换行或缩短文字；最多 5 行。' : !fontReady ? '正在加载字体…' : '已就绪。下载图片只包含封面。';
+    window.coverState = { ready:fontReady, valid, style:layout.value, theme:theme.value, lines:lines.length, fontSize:appliedSize };
+    resize();
+  }
+
+  function download(blob,name) {
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = name;
+    link.click();
+    setTimeout(() => URL.revokeObjectURL(url),1000);
+  }
+
+  document.getElementById('save').addEventListener('click', () => {
+    const config = JSON.stringify({style:layout.value,theme:theme.value,text:copy.value}).replace(/</g,'\\u003c');
+    const clone = document.documentElement.cloneNode(true);
+    clone.querySelector('#cover-data').textContent = '\n' + config + '\n';
+    clone.querySelector('body').classList.remove('render-only');
+    download(new Blob(['<!doctype html>\n' + clone.outerHTML],{type:'text/html;charset=utf-8'}),'cover.html');
+    status.textContent = 'HTML 已保存，请与 cover-serif.woff2 放在同一文件夹。';
+  });
+
+  exportButton.addEventListener('click', () => {
+    if (!valid || !fontReady) {
+      return;
+    }
+
+    const canvas = document.createElement('canvas');
+    canvas.width = 1080;
+    canvas.height = 1440;
+    const context = canvas.getContext('2d');
+    const style = getComputedStyle(cover);
+    const titleStyle = getComputedStyle(headline);
+    const size = Number.parseFloat(titleStyle.fontSize);
+    const lineHeight = Number.parseFloat(titleStyle.lineHeight);
+    const top = Number.parseFloat(style.getPropertyValue('--rule-top'));
+    const ink = style.getPropertyValue('--ink').trim();
+    const accent = style.getPropertyValue('--accent').trim();
+    context.fillStyle = style.getPropertyValue('--paper').trim();
+    context.fillRect(0,0,1080,1440);
+    const quote = layout.value === 'quote';
+
+    if (quote) {
+      context.font = '700 320px "Cover Serif"';
+      context.fillStyle = accent;
+      const quoteMetrics = context.measureText('国Ag');
+
+      for (const mark of cover.querySelectorAll('.quote-mark')) {
+        const markStyle = getComputedStyle(mark);
+        const right = mark.classList.contains('quote-close');
+        context.textAlign = right ? 'right' : 'left';
+        const x = Number.parseFloat(markStyle.left) + (right ? Number.parseFloat(markStyle.width) : 0);
+        const y = Number.parseFloat(markStyle.top) + (280 - quoteMetrics.fontBoundingBoxAscent - quoteMetrics.fontBoundingBoxDescent) / 2 + quoteMetrics.fontBoundingBoxAscent;
+        context.fillText(mark.textContent,x,y);
+      }
+
+      context.textAlign = 'left';
+    } else {
+      context.fillStyle = style.getPropertyValue('--rule').trim();
+      context.fillRect(112,top,856,3);
+      context.fillRect(112,top + 123 + lines.length * lineHeight,856,3);
+    }
+
+    context.font = `700 ${size}px "Cover Serif"`;
+    context.textBaseline = 'alphabetic';
+    const metrics = context.measureText('国Ag');
+    const ascent = metrics.fontBoundingBoxAscent;
+    const descent = metrics.fontBoundingBoxDescent;
+    const baseline = top + (quote ? 0 : 63) + (lineHeight - ascent - descent) / 2 + ascent;
+
+    for (let index = 0; index < lines.length; index++) {
+      let x = 112;
+
+      for (const part of lines[index]) {
+        context.fillStyle = part.accent ? accent : ink;
+        context.fillText(part.text,x,baseline + index * lineHeight);
+        x += context.measureText(part.text).width;
+      }
+    }
+
+    canvas.toBlob(blob => {
+      if (blob) {
+        download(blob,'小红书封面.png');
+        status.textContent = '已下载 1080 × 1440 PNG。';
+      }
+    },'image/png');
+  });
+
+  copy.addEventListener('input',update);
+  theme.addEventListener('change',update);
+  layout.addEventListener('change',update);
+  new ResizeObserver(resize).observe(document.querySelector('.preview-window'));
+  update();
+  document.fonts.load('700 120px "Cover Serif"').then(() => {
+    fontReady = document.fonts.check('700 120px "Cover Serif"');
+    update();
+  }).catch(() => {
+    status.classList.add('error');
+    status.textContent = '字体未加载，请确认 cover-serif.woff2 与 HTML 放在同一文件夹。';
+    window.coverState = {ready:false,valid:false,error:status.textContent};
+  });
+})();
+</script>
+</body>
+</html>
